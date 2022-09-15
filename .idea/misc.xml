@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/city_icon.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/email_icon.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/hide_password.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/password_eye.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/password_icon.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/phone_icon.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/show_password.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/transparent_image.xml" value="0.2235" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/LazyColumn/app/src/main/res/drawable/username_icon.xml" value="0.2235" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
