@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "374787908568",
+    "project_id": "lazycolumn",
+    "storage_bucket": "lazycolumn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374787908568:android:3b190eb83d3ac58dd988ad",
+        "android_client_info": {
+          "package_name": "com.example.lazycolumn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374787908568-kb46eiucjfv32vrs6gn7vendssc6rvsj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhzVCbHAplvvUtgVs58bVJHu2v8OTe7qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374787908568-kb46eiucjfv32vrs6gn7vendssc6rvsj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

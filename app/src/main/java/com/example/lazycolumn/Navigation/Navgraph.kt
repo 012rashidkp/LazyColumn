@@ -5,10 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.lazycolumn.Screens.HomeScreen
-import com.example.lazycolumn.Screens.LoginPage
-import com.example.lazycolumn.Screens.RegisterPage
-import com.example.lazycolumn.Screens.SplashScreen
+import com.example.lazycolumn.Screens.*
 
 
 @Composable
@@ -21,13 +18,24 @@ fun SetupNavGraph(navController: NavHostController) {
             SplashScreen(navController = navController)
         }
         composable(route=Screens.Login.route){
-            LoginPage(navController = navController)
+            EnterExitAnimation { LoginPage(navController = navController) }
+
         }
         composable(route=Screens.Register.route){
-            RegisterPage(navController = navController)
+          EnterExitAnimation { RegisterPage(navController = navController) }
+
         }
         composable(route = Screens.Home.route) {
-           HomeScreen(navController = navController)
+            EnterExitAnimation { HomeScreen(navController = navController) }
+
+        }
+        composable(route = Screens.ListPage.route) {
+            EnterExitAnimation { ListScreen(navController=navController) }
+
+        }
+        composable(route = Screens.CreatePage.route) {
+            EnterExitAnimation { CreateScreen(navController=navController) }
+
         }
     }
 }

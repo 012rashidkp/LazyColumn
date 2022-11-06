@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-open class BaseResponse {
-    @SerialName("error")
-    val error: Boolean=false
-    @SerialName("message")
-    val message: String=""
-}
+data class LoginRequest(
+    @SerialName("email")
+    val email: String,
+    @SerialName("password")
+    val password: String,
+)

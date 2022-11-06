@@ -1,18 +1,19 @@
 package com.example.lazycolumn.Model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 
+@kotlinx.serialization.Serializable
 data class AuthResponse(
-    @SerializedName("username")
+    @SerialName("username")
     val username: String,
-    @SerializedName("email")
+    @SerialName("email")
     val email: String,
-    @SerializedName("phone")
+    @SerialName("phone")
     val phone: String,
-    @SerializedName("city")
+    @SerialName("city")
     val city: String,
-    @SerializedName("token")
+    @SerialName("token")
     val token: String,
-    @SerializedName("userid")
+    @SerialName("userid")
     val userid: String
 ):BaseResponse()
