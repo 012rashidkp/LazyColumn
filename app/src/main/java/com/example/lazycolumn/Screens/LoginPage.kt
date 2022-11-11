@@ -1,6 +1,5 @@
 package com.example.lazycolumn.Screens
 
-import android.os.Handler
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,10 +27,8 @@ import androidx.navigation.NavController
 import com.example.lazycolumn.Navigation.Screens
 import com.example.lazycolumn.R
 import com.example.lazycolumn.FormValidation.LoginFormEvent
-import com.example.lazycolumn.ViewModel.ValidationViewModel
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.lazycolumn.ViewModel.UserValidationViewModel
 import kotlinx.coroutines.*
-import kotlin.time.seconds
 
 @Composable
 fun LoginPage(navController: NavController){
@@ -47,7 +44,7 @@ fun LoginPage(navController: NavController){
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val loading = remember { mutableStateOf(false) }
-    val viewModel= viewModel<ValidationViewModel>()
+    val viewModel= viewModel<UserValidationViewModel>()
     val state=viewModel.state
     val context= LocalContext.current
 
@@ -57,7 +54,7 @@ fun LoginPage(navController: NavController){
     LaunchedEffect(key1 = context){
         viewModel.validationEvents.collect{event->
             when(event){
-             is ValidationViewModel.ValidationEvent.success->{
+             is UserValidationViewModel.ValidationEvent.success->{
 
 
 

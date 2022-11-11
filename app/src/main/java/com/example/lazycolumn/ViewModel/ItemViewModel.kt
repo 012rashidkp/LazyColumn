@@ -1,30 +1,84 @@
 package com.example.lazycolumn.ViewModel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.Snapshot
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.lazycolumn.DatabaseService.AddProducts
+import com.example.lazycolumn.DatabaseService.DeleteProducts
+import com.example.lazycolumn.DatabaseService.GetProducts
+import com.example.lazycolumn.Database.DataState
 import com.example.lazycolumn.Database.Products
-import com.example.lazycolumn.Repository.ItemRepository
+import com.example.lazycolumn.DatabaseService.GetproductsByid
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 @HiltViewModel
-class ItemViewModel @Inject constructor(private val repository: ItemRepository):ViewModel() {
+class ItemViewModel @Inject constructor(private val addProducts: AddProducts,private val getProducts: GetProducts,private val deleteProducts: DeleteProducts,private val getproductsByid: GetproductsByid):ViewModel() {
+    private var _listproducts = SnapshotStateList<Products>()
+    val listProducts = _listproducts
+    private var detailItems=MutableLiveData<Products>()
+    var listdetailproducts =detailItems
 
-    suspend fun insert(item: Products) = GlobalScope.launch {
-        repository.insert(item)
+
+init {
+    getProducts().onEach { dataState ->
+        when (dataState) {
+            is DataState.Success -> {
+                _listproducts.clear()
+                _listproducts.addAll(dataState.data)
+            }
+        }
+    }.launchIn(viewModelScope)
+}
+    fun addProducts(productName:String,productdesc:String,productprice:Double,productqty:Long) {
+
+        addProducts(Products(0, productName = productName, productdesc = productdesc, productprice = productprice, productqty = productqty)).onEach { dataState ->
+            when (dataState) {
+                is DataState.Success -> {
+                    _listproducts.clear()
+                    _listproducts.addAll(dataState.data)
+
+                }
+                is DataState.Loading -> {
+                }
+                is DataState.Error -> {
+                }
+            }
+        }.launchIn(viewModelScope)
     }
+    fun getproductsbyid(prodid: Int){
+        getproductsByid(prodid = prodid).onEach {
+            when (it) {
+                is DataState.Success -> {
+                    listdetailproducts.value=it.data
 
-    // In coroutines thread delete item in delete function.
-    suspend  fun delete(item: Products) = GlobalScope.launch {
-        repository.delete(item)
+                }
+                is DataState.Loading -> {
+                }
+                is DataState.Error -> {
+                }
+            }
+        }.launchIn(viewModelScope)
     }
-    suspend fun update(item: Products) = GlobalScope.launch {
-        repository.update(item)
+    fun deleteproduct(products: Products){
+        deleteProducts(products).onEach {
+            when (it) {
+                is DataState.Success -> {
+                    _listproducts.clear()
+                    _listproducts.addAll(it.data)
+
+                }
+                is DataState.Loading -> {
+                }
+                is DataState.Error -> {
+                }
+            }
+        }.launchIn(viewModelScope)
     }
-    //Here we initialized allGroceryItems function with repository
-    fun allProductinfo() = repository.allProductinfo()
-
-    fun detailproduct(prodid:Int)=repository.detailproductinfo(prodid)
-
-
 }

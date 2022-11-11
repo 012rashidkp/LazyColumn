@@ -2,26 +2,27 @@ package com.example.lazycolumn.Database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import java.util.concurrent.Flow
 
 @Dao
 interface ProductsDao {
     @Query("SELECT * FROM PRODUCTS")
-    fun getAllproducts():LiveData<List<Products>>
+    suspend  fun getAllproducts():List<Products>
 
     @Query("SELECT * from products where productid = :prodid")
-    fun getproductById(prodid: Int): Products?
+    suspend fun getproductById(prodid: Int): Products
 
-    @Insert
-    suspend fun insertproducts(products: Products)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend  fun insertproducts(products: Products)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateproducts(products: Products)
 
     @Delete
-    suspend fun deleteproducts(products: Products)
+    suspend  fun deleteproducts(products: Products)
 
     @Query("DELETE FROM products")
-    suspend fun deleteAllProducts()
+     fun deleteAllProducts()
 
 
 }

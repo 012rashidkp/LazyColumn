@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LazyColumn"
-        android:name=".Injection.Application"
+        android:name=".Injection.ItemApplication"
         tools:targetApi="31">
         <activity
             android:name=".Activity.MainActivity"
