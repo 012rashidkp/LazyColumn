@@ -1,7 +1,5 @@
 package com.example.lazycolumn.Screens
 
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,13 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.lazycolumn.Activity.MainActivity
-import com.example.lazycolumn.Database.Products
 import com.example.lazycolumn.FormValidation.ProductFormEvent
-import com.example.lazycolumn.Navigation.Screens
 import com.example.lazycolumn.R
 import com.example.lazycolumn.ViewModel.ItemViewModel
 import com.example.lazycolumn.ViewModel.ProductValidationViewModel
-import com.example.lazycolumn.ViewModel.UserValidationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

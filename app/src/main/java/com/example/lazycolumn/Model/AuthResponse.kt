@@ -1,9 +1,13 @@
 package com.example.lazycolumn.Model
 
-import kotlinx.serialization.SerialName
 
-@kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AuthResponse(
+    @SerialName("created_at")
+    val createdAt: String,
     @SerialName("username")
     val username: String,
     @SerialName("email")
@@ -12,8 +16,8 @@ data class AuthResponse(
     val phone: String,
     @SerialName("city")
     val city: String,
-    @SerialName("token")
-    val token: String,
     @SerialName("userid")
-    val userid: String
+    val userid: String,
+    @SerialName("token")
+    val token: String
 ):BaseResponse()

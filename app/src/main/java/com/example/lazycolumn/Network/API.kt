@@ -2,7 +2,11 @@ package com.example.lazycolumn.Network
 
 class API {
     companion object{
-        const val BASE_URL = "https://jsonplaceholder.typicode.com"
+        val BaseUrl="http://192.168.19.5:8000/api/"
         const val Login="login/"
+        val Registerusers=BaseUrl+"register/"
+        const val Upload="fileupload/"
+        const val retrievefile="getfiles/"
+        const val deletefile="deletefile/"
     }
 }

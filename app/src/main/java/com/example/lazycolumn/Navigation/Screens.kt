@@ -7,4 +7,5 @@ sealed class Screens(val route: String) {
     object Register:Screens("Register")
     object ListPage : Screens("List_Page")
     object CreatePage:Screens("create_page")
+    object UploadScreen:Screens("upload_page")
 }

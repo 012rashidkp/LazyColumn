@@ -65,6 +65,7 @@ fun HomeScreen(navController: NavHostController) {
                             .height(50.dp).clickable {
                                when(listitems[index].itemid){
                                    1->navController.navigate(Screens.ListPage.route)
+                                   7->navController.navigate(Screens.UploadScreen.route)
                                }
                             },
                         elevation = 8.dp,

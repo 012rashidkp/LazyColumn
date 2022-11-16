@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,9 +22,20 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.lazycolumn.Activity.MainActivity
+import com.example.lazycolumn.FormValidation.RegisterFormEvent
 import com.example.lazycolumn.Navigation.Screens
 import com.example.lazycolumn.R
+import com.example.lazycolumn.ViewModel.AuthViewModel
+import com.example.lazycolumn.ViewModel.LoginValidationViewModel
+import com.example.lazycolumn.ViewModel.RegisterValidationViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun RegisterPage(navController: NavController){
@@ -36,14 +49,57 @@ fun RegisterPage(navController: NavController){
     val showpasswordicon= painterResource(id = R.drawable.show_password)
     val maincolor= colorResource(id = R.color.teal_700)
     val greycolor= colorResource(id = R.color.greycolor)
-    val emailvalue= remember { mutableStateOf("") }
-    val usernamevalue= remember { mutableStateOf("")}
-    val phonenumbervalue= remember { mutableStateOf("")}
-    val cityvalue= remember { mutableStateOf("")}
-    val passwordvalue= remember { mutableStateOf("") }
     val passwordvisibility= remember { mutableStateOf(false) }
     val focusRequester= remember { mutableStateOf(FocusRequester) }
     val loading = remember { mutableStateOf(false) }
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    val registerviewModel= viewModel<RegisterValidationViewModel>()
+    val state=registerviewModel.state
+    val context= LocalContext.current
+    val authviewmodel= hiltViewModel<AuthViewModel>()
+    val authstate=authviewmodel.state.value
+LaunchedEffect(key1 = context){
+    registerviewModel.validationEvents.collect { event ->
+        when(event){
+            is RegisterValidationViewModel.ValidationEvent.success->{
+                loading.value=true
+                authviewmodel.Registeruser(registerviewModel.state.username,registerviewModel.state.email,registerviewModel.state.phone,registerviewModel.state.city,registerviewModel.state.password)
+                if (authstate.register_response!=null){
+                      System.out.println("response_not_null ${authstate.register_response}")
+                    if (!authstate.register_response.error){
+                        System.out.println("error_type ${authstate.register_response.error}")
+                        CoroutineScope(Dispatchers.IO).launch {
+                            kotlinx.coroutines.delay(3000)
+                            withContext(Dispatchers.Main) {
+                                (context as MainActivity).onBackPressed()
+                            } }
+                    }
+
+
+
+
+
+                }
+                else if (authstate.loading){
+
+                }
+                else{
+                    authstate.error?.let { it }
+                }
+
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Box(modifier = Modifier
             .fillMaxSize()
@@ -51,17 +107,17 @@ fun RegisterPage(navController: NavController){
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                Image(painter = image,contentDescription = null )
+                Image(painter = image,contentDescription = null, modifier = Modifier.height(screenHeight*0.1f ) )
 
                 Text(text = "SIgnup Here", color = colorResource(id = R.color.black), fontSize = 21.sp)
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Column( modifier = Modifier
                     .fillMaxWidth(0.8f)) {
 
                     TextField(
 
-                        value = emailvalue.value, onValueChange ={emailvalue.value=it},
+                        value = state.email, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.EmailChanged(it))},
                         label = { Text(text = "Email Address", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         placeholder = { Text(text = "Email Address", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         leadingIcon = { Icon(painter = emailicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
@@ -77,15 +133,18 @@ fun RegisterPage(navController: NavController){
                             focusedIndicatorColor = greycolor,
                             textColor = colorResource(id = R.color.black)
                         ),
-
+                        isError = state.emailError !=null,
 
                     )
+                    if (state.emailError!=null){
+                        Text(text = state.emailError, color = MaterialTheme.colors.error)
+                    }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     TextField(
 
-                        value = usernamevalue.value, onValueChange ={usernamevalue.value=it},
+                        value = state.username, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.UserNameChanged(it))},
                         label = { Text(text = "User Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         placeholder = { Text(text = "User Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         singleLine = true,
@@ -101,14 +160,17 @@ fun RegisterPage(navController: NavController){
                             focusedIndicatorColor = greycolor,
                             textColor = colorResource(id = R.color.black)
                         ),
-
+                   isError = state.usernameError!=null
                     )
+                    if (state.usernameError!=null){
+                        Text(text = state.usernameError, color = MaterialTheme.colors.error)
+                    }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     TextField(
 
-                        value = phonenumbervalue.value, onValueChange ={phonenumbervalue.value=it},
+                        value = state.phone, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.PhoneChanged(it))},
                         label = { Text(text = "Phone Number", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         placeholder = { Text(text = "Phone Number", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         singleLine = true,
@@ -125,15 +187,17 @@ fun RegisterPage(navController: NavController){
                             focusedIndicatorColor = greycolor,
                             textColor = colorResource(id = R.color.black)
                         ),
-
+                     isError = state.phoneError!=null
                     )
+                    if (state.phoneError!=null){
+                        Text(text = state.phoneError, color = MaterialTheme.colors.error)
+                    }
 
-
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     TextField(
 
-                        value = cityvalue.value, onValueChange ={cityvalue.value=it},
+                        value = state.city, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.CityChanged(it))},
                         label = { Text(text = "City Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         placeholder = { Text(text = "Phone Number", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         singleLine = true,
@@ -148,16 +212,18 @@ fun RegisterPage(navController: NavController){
                             focusedIndicatorColor = greycolor,
                             textColor = colorResource(id = R.color.black)
                         ),
-
+                     isError =state.cityError!=null
                     )
+                    if (state.cityError!=null){
+                        Text(text = state.cityError, color = MaterialTheme.colors.error)
+                    }
 
 
-
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     TextField(
 
-                        value = passwordvalue.value, onValueChange ={passwordvalue.value=it},
+                        value = state.password, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.PasswordChanged(it))},
                         label = { Text(text = "Password", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         placeholder = { Text(text = "Password", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         singleLine = true,
@@ -173,18 +239,22 @@ fun RegisterPage(navController: NavController){
                             focusedIndicatorColor = greycolor,
                             textColor = colorResource(id = R.color.black)
                         ),
-                        trailingIcon = { Icon(painter = if (!passwordvisibility.value) hidepasswordicon else showpasswordicon , contentDescription =null,tint=maincolor ,   modifier = Modifier.size(28.dp).clickable {
-                            passwordvisibility.value=!passwordvisibility.value
-                        })},
+                        trailingIcon = { Icon(painter = if (!passwordvisibility.value) hidepasswordicon else showpasswordicon , contentDescription =null,tint=maincolor ,   modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                passwordvisibility.value = !passwordvisibility.value
+                            })},
 
-
+                       isError = state.passwordError!=null,
                         visualTransformation = if (passwordvisibility.value) VisualTransformation.None else PasswordVisualTransformation()
                     )
+                    if (state.passwordError!=null){
+                        Text(text = state.passwordError, color = MaterialTheme.colors.error)
+                    }
 
 
 
-
-                    Spacer(modifier = Modifier.height(34.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
 
 
@@ -198,8 +268,9 @@ fun RegisterPage(navController: NavController){
                             .background(
                                 colorResource(id = R.color.teal_700),
                                 shape = RoundedCornerShape(12.dp)
-                            ).clickable {
-                                loading.value = !loading.value
+                            )
+                            .clickable {
+                                registerviewModel.onEvent(RegisterFormEvent.Register)
                             }) {
 
                         if (loading.value){
@@ -216,7 +287,7 @@ fun RegisterPage(navController: NavController){
                         }
 
                     }
-                    Spacer(modifier = Modifier.height(25.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(text = "Already a Account", color = colorResource(id = R.color.teal_700), fontSize = 19.sp, textAlign = TextAlign.Center, modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
                         .clickable {

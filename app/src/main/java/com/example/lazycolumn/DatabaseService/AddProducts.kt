@@ -1,6 +1,6 @@
 package com.example.lazycolumn.DatabaseService
 
-import com.example.lazycolumn.Database.DataState
+import com.example.lazycolumn.States.DataState
 import com.example.lazycolumn.Database.Products
 import com.example.lazycolumn.Repository.ItemRepository
 import kotlinx.coroutines.flow.Flow

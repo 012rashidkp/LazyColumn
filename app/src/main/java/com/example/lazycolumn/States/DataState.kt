@@ -1,4 +1,4 @@
-package com.example.lazycolumn.Database
+package com.example.lazycolumn.States
 
 sealed class DataState<out R> {
     data class Success<out T>(val data: T) : DataState<T>()

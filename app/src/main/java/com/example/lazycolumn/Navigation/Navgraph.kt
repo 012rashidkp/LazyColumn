@@ -37,5 +37,10 @@ fun SetupNavGraph(navController: NavHostController) {
             EnterExitAnimation { CreateScreen(navController=navController) }
 
         }
+
+        composable(route = Screens.UploadScreen.route) {
+            EnterExitAnimation { DataUploadScreen(navController=navController) }
+
+        }
     }
 }

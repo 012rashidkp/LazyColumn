@@ -27,8 +27,10 @@ import androidx.navigation.NavController
 import com.example.lazycolumn.Navigation.Screens
 import com.example.lazycolumn.R
 import com.example.lazycolumn.FormValidation.LoginFormEvent
-import com.example.lazycolumn.ViewModel.UserValidationViewModel
+import com.example.lazycolumn.ViewModel.LoginValidationViewModel
 import kotlinx.coroutines.*
+import androidx.compose.ui.platform.LocalConfiguration
+
 
 @Composable
 fun LoginPage(navController: NavController){
@@ -44,17 +46,19 @@ fun LoginPage(navController: NavController){
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val loading = remember { mutableStateOf(false) }
-    val viewModel= viewModel<UserValidationViewModel>()
+    val viewModel= viewModel<LoginValidationViewModel>()
     val state=viewModel.state
     val context= LocalContext.current
 
-
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
 
 
     LaunchedEffect(key1 = context){
         viewModel.validationEvents.collect{event->
             when(event){
-             is UserValidationViewModel.ValidationEvent.success->{
+             is LoginValidationViewModel.ValidationEvent.success->{
 
 
 
@@ -82,7 +86,7 @@ Box(modifier = Modifier
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Image(painter = image,contentDescription = null )
+        Image(painter = image,contentDescription = null, modifier = Modifier.height(screenHeight*0.15f))
 
         Text(text = "SIgn In", color = colorResource(id = R.color.black), fontSize = 21.sp)
 
