@@ -16,9 +16,8 @@ class AuthApiHelper(private val authApiService: AuthApiService):
     ): Flow<Resource<AuthResponse>> = flow {
        try {
          emit(Resource.Loading())
-
-
-         val result=authApiService.Registeruser(username,email,phone,city,password)
+          val authresult=authApiService.Registeruser(username,email,phone,city,password)
+           emit(Resource.Success(data =authresult))
        }catch (e:Exception){
            emit(Resource.Error(e.message ?: "Error"))
        }

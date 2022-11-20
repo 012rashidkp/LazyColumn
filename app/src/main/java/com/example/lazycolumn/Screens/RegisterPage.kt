@@ -1,5 +1,10 @@
 package com.example.lazycolumn.Screens
 
+import android.app.Activity
+import android.os.Handler
+import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,10 +38,7 @@ import com.example.lazycolumn.R
 import com.example.lazycolumn.ViewModel.AuthViewModel
 import com.example.lazycolumn.ViewModel.LoginValidationViewModel
 import com.example.lazycolumn.ViewModel.RegisterValidationViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 @Composable
 fun RegisterPage(navController: NavController){
@@ -60,37 +63,53 @@ fun RegisterPage(navController: NavController){
     val context= LocalContext.current
     val authviewmodel= hiltViewModel<AuthViewModel>()
     val authstate=authviewmodel.state.value
+    var responsestate= remember { mutableStateOf(0) }
+
+            if (authstate.register_response!=null){
+                System.out.println("response_not_null ${authstate.register_response}")
+                if (!authstate.register_response.error){
+                 //   navController.navigate(Screens.Login.route)
+                //val activity = (LocalContext.current as? Activity)
+//                    activity?.onBackPressed()
+//
+                  responsestate.value=1
+
+                }
+            }
+            else if (authstate.loading){
+
+            }
+            else{
+                authstate.error?.let { it }
+            }
+
+
+
+
+
+
+
 LaunchedEffect(key1 = context){
     registerviewModel.validationEvents.collect { event ->
         when(event){
             is RegisterValidationViewModel.ValidationEvent.success->{
                 loading.value=true
-                authviewmodel.Registeruser(registerviewModel.state.username,registerviewModel.state.email,registerviewModel.state.phone,registerviewModel.state.city,registerviewModel.state.password)
-                if (authstate.register_response!=null){
-                      System.out.println("response_not_null ${authstate.register_response}")
-                    if (!authstate.register_response.error){
-                        System.out.println("error_type ${authstate.register_response.error}")
-                        CoroutineScope(Dispatchers.IO).launch {
-                            kotlinx.coroutines.delay(3000)
-                            withContext(Dispatchers.Main) {
-                                (context as MainActivity).onBackPressed()
-                            } }
+                CoroutineScope(Dispatchers.IO).launch {
+                    kotlinx.coroutines.delay(3000)
+                    withContext(Dispatchers.Main) {
+                        authviewmodel.Registeruser(registerviewModel.state.username,registerviewModel.state.email,registerviewModel.state.phone,registerviewModel.state.city,registerviewModel.state.password)
+
                     }
-
-
-
-
-
                 }
-                else if (authstate.loading){
 
-                }
-                else{
-                    authstate.error?.let { it }
-                }
+
+
 
             }
         }
+    }
+    if (responsestate.value==1){
+        navController.popBackStack()
     }
 }
 
@@ -199,7 +218,7 @@ LaunchedEffect(key1 = context){
 
                         value = state.city, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.CityChanged(it))},
                         label = { Text(text = "City Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        placeholder = { Text(text = "Phone Number", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
+                        placeholder = { Text(text = "City Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                         singleLine = true,
                         leadingIcon = { Icon(painter = cityicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
