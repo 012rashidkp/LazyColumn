@@ -146,8 +146,7 @@ if (state.emailError!=null){
                     Modifier
                         .fillMaxWidth()
                         .height(60.dp)
-                        .background(
-                            colorResource(id = R.color.teal_700),
+                        .background(colorResource(id = R.color.teal_700),
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {

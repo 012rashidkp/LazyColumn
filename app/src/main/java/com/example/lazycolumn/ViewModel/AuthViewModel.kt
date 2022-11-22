@@ -18,9 +18,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor (private val authrepository: AuthRepository):ViewModel(){
     private val _state = mutableStateOf(RegisterState())
-
-
     val state: State<RegisterState> = _state
+
+
+
+
+
     suspend fun Registeruser(username:String, email:String, phone: String, city: String, password: String){
         authrepository.Registeruser(username = username, email = email, phone = phone, city = city, password = password).onEach { result->
             when (result) {

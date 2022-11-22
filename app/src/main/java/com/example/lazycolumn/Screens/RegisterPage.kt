@@ -1,10 +1,5 @@
 package com.example.lazycolumn.Screens
 
-import android.app.Activity
-import android.os.Handler
-import android.util.Log
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,20 +22,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.lazycolumn.Activity.MainActivity
 import com.example.lazycolumn.FormValidation.RegisterFormEvent
 import com.example.lazycolumn.Navigation.Screens
 import com.example.lazycolumn.R
+import com.example.lazycolumn.Utils.CustomMessage
+import com.example.lazycolumn.Utils.content
 import com.example.lazycolumn.ViewModel.AuthViewModel
-import com.example.lazycolumn.ViewModel.LoginValidationViewModel
 import com.example.lazycolumn.ViewModel.RegisterValidationViewModel
+import com.radusalagean.infobarcompose.InfoBar
 import kotlinx.coroutines.*
+
 
 @Composable
 fun RegisterPage(navController: NavController){
@@ -63,7 +61,11 @@ fun RegisterPage(navController: NavController){
     val context= LocalContext.current
     val authviewmodel= hiltViewModel<AuthViewModel>()
     val authstate=authviewmodel.state.value
-    var responsestate= remember { mutableStateOf(0) }
+    val responsestate= remember { mutableStateOf(0) }
+    val showmessage= remember { mutableStateOf("") }
+    var message: CustomMessage? by remember { mutableStateOf(null) }
+
+
 
             if (authstate.register_response!=null){
                 System.out.println("response_not_null ${authstate.register_response}")
@@ -72,14 +74,25 @@ fun RegisterPage(navController: NavController){
                 //val activity = (LocalContext.current as? Activity)
 //                    activity?.onBackPressed()
 //
-                  responsestate.value=1
+                    responsestate.value=1
+                    showmessage.value=authstate.register_response.message
 
                 }
-            }
-            else if (authstate.loading){
+                else if (authstate.register_response.error){
+                    responsestate.value=2
+                    showmessage.value=authstate.register_response.message
+
+                }
+
+
 
             }
+            else if (authstate.loading){
+                responsestate.value=0
+            }
             else{
+                responsestate.value=3
+                showmessage.value="something went wrong"
                 authstate.error?.let { it }
             }
 
@@ -94,12 +107,46 @@ LaunchedEffect(key1 = context){
         when(event){
             is RegisterValidationViewModel.ValidationEvent.success->{
                 loading.value=true
+                authviewmodel.Registeruser(registerviewModel.state.username,registerviewModel.state.email,registerviewModel.state.phone,registerviewModel.state.city,registerviewModel.state.password)
+                message= CustomMessage(
+                    textString = showmessage.value,
+                    textColor = Color.White,
+                    icon = Icons.Rounded.Done,
+                    iconColor = Color.White,
+                    backgroundColor =Color(0xFF018786)
+
+                )
+
                 CoroutineScope(Dispatchers.IO).launch {
                     kotlinx.coroutines.delay(3000)
                     withContext(Dispatchers.Main) {
-                        authviewmodel.Registeruser(registerviewModel.state.username,registerviewModel.state.email,registerviewModel.state.phone,registerviewModel.state.city,registerviewModel.state.password)
+                         if (responsestate.value==1){
+                             navController.popBackStack()
+
+                             System.out.println("authstate_1_value ${responsestate.value}")
+                         }
+                        else if (responsestate.value==2){
+                             message= CustomMessage(
+                                 textString = showmessage.value,
+                                 textColor = Color.White,
+                                 icon = Icons.Rounded.Done,
+                                 iconColor = Color.White,
+                                 backgroundColor =Color(0xFF018786)
+
+                             )
+
+
+
+                            loading.value=false
+                         }
+                        else if (responsestate.value==3){
+                             loading.value=false
+
+
+                         }
 
                     }
+
                 }
 
 
@@ -108,9 +155,7 @@ LaunchedEffect(key1 = context){
             }
         }
     }
-    if (responsestate.value==1){
-        navController.popBackStack()
-    }
+
 }
 
 
@@ -313,6 +358,11 @@ LaunchedEffect(key1 = context){
                             navController.navigate(Screens.Login.route)
 
                         })
+                    InfoBar(offeredMessage =message, content = {
+                        content
+                    }) {
+                       message=null
+                    }
 
 
                 }
