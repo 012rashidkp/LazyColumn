@@ -15,9 +15,9 @@ data class AuthResponse(
     @SerialName("phone")
     val phone: String,
     @SerialName("city")
-    val city: String,
-    @SerialName("userid")
-    val userid: String,
-    @SerialName("token")
-    val token: String
+   val city: String,
+   @SerialName("userid")
+   val userid: String,
+   @SerialName("token")
+   val token: String
 ):BaseResponse()

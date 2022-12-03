@@ -7,8 +7,11 @@ import kotlinx.serialization.Serializable
 open class BaseResponse {
     @SerialName("error")
     val error: Boolean=false
-    @SerialName("status_code")
-    val status_code:String=""
     @SerialName("message")
     val message: String=""
+    @SerialName("status_code")
+    val status_code:String=""
+    @SerialName("time")
+    val time:String=""
+
 }

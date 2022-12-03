@@ -1,0 +1,18 @@
+CREATE TABLE productEntity (
+id INTEGER NOT NULL PRIMARY KEY,
+productName TEXT NOT NULL,
+prodDesc TEXT NOT NULL,
+prod_price REAL NOT NULL,
+prod_qty INTEGER
+);
+getAllproducts:
+SELECT * FROM productEntity;
+
+getproductbyid:
+SELECT * FROM productEntity WHERE id=:id;
+
+insertproduct:
+INSERT OR REPLACE INTO productEntity VALUES (?,?,?,?,?);
+
+deleteproduct:
+DELETE FROM productEntity WHERE id=:id;

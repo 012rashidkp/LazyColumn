@@ -3,12 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'kotlin-parcelize'
-  //  id 'kotlin-android-extensions'
+
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.plugin.serialization'
-  
+    id 'com.squareup.sqldelight'
 
 
 }
@@ -102,9 +102,7 @@ dependencies {
     // kotlin serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
 
-    implementation "androidx.room:room-runtime:2.4.0-alpha04"
-    implementation "androidx.room:room-ktx:2.4.0-alpha04"
-    kapt "androidx.room:room-compiler:2.4.0-alpha04"
+
 
     // ktor client
     implementation "io.ktor:ktor-client-core:1.6.5"
@@ -115,4 +113,13 @@ dependencies {
     implementation "io.ktor:ktor-client-gson:1.6.5"
     implementation 'com.radusalagean:info-bar-compose:1.0.0'
 
+
+    // SQL Delight
+    implementation "com.squareup.sqldelight:android-driver:1.5.2"
+    implementation "com.squareup.sqldelight:coroutines-extensions-jvm:1.5.2"
+}
+sqldelight {
+    ItemsDatabase{
+        packageName = "com.example.lazycolumn"
+    }
 }

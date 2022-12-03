@@ -28,15 +28,23 @@ class AuthViewModel @Inject constructor (private val authrepository: AuthReposit
         authrepository.Registeruser(username = username, email = email, phone = phone, city = city, password = password).onEach { result->
             when (result) {
                 is Resource.Success -> {
-                    _state.value = RegisterState(register_response = result.data!!, loading = false, error = null)
+
+
+
+                       System.out.println("error_result ${result.data}")
+                       _state.value = RegisterState(register_response = result.data!!, error = result.data.error, message = result.data.message, loading = false, failure = null)
+
+
                 }
 
                 is Resource.Loading -> {
-                    _state.value = RegisterState(register_response  = null, loading = true, error = null)
+                    _state.value = RegisterState(error = null, register_response  = null, loading = true, failure = null)
                 }
 
                 is Resource.Error -> {
-                    _state.value = RegisterState(register_response = null, loading = false, error = result.message)
+                    System.out.println("response_state ${result.data?.error}")
+                    System.out.println("failure ${result.message}")
+                    _state.value = RegisterState(error = null, register_response = null, loading = false, failure = result.message)
                 }
             }
         }.launchIn(viewModelScope)

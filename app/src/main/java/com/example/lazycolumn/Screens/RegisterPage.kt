@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,36 +66,29 @@ fun RegisterPage(navController: NavController){
     val showmessage= remember { mutableStateOf("") }
     var message: CustomMessage? by remember { mutableStateOf(null) }
 
+if (authstate.error==true){
+    System.out.println("error_state ${authstate.error}")
+    responsestate.value=2
+    showmessage.value=authstate.register_response!!.message
+}
+else if (authstate.error==false){
+    System.out.println("error_state ${authstate.error}")
+    responsestate.value=1
+    showmessage.value=authstate.register_response!!.message
+}
+else if (authstate.loading){
+    System.out.println("error_state ${authstate.error}")
+    responsestate.value=0
+}
+else{
+    System.out.println("error_state failure")
+    responsestate.value=3
+    showmessage.value="something went wrong"
+    authstate.failure?.let { it }
+}
 
 
-            if (authstate.register_response!=null){
-                System.out.println("response_not_null ${authstate.register_response}")
-                if (!authstate.register_response.error){
-                 //   navController.navigate(Screens.Login.route)
-                //val activity = (LocalContext.current as? Activity)
-//                    activity?.onBackPressed()
-//
-                    responsestate.value=1
-                    showmessage.value=authstate.register_response.message
 
-                }
-                else if (authstate.register_response.error){
-                    responsestate.value=2
-                    showmessage.value=authstate.register_response.message
-
-                }
-
-
-
-            }
-            else if (authstate.loading){
-                responsestate.value=0
-            }
-            else{
-                responsestate.value=3
-                showmessage.value="something went wrong"
-                authstate.error?.let { it }
-            }
 
 
 
@@ -108,19 +102,23 @@ LaunchedEffect(key1 = context){
             is RegisterValidationViewModel.ValidationEvent.success->{
                 loading.value=true
                 authviewmodel.Registeruser(registerviewModel.state.username,registerviewModel.state.email,registerviewModel.state.phone,registerviewModel.state.city,registerviewModel.state.password)
-                message= CustomMessage(
-                    textString = showmessage.value,
-                    textColor = Color.White,
-                    icon = Icons.Rounded.Done,
-                    iconColor = Color.White,
-                    backgroundColor =Color(0xFF018786)
 
-                )
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    kotlinx.coroutines.delay(3000)
+                    delay(3000)
                     withContext(Dispatchers.Main) {
                          if (responsestate.value==1){
+                             message= CustomMessage(
+                                 textString = showmessage.value,
+                                 textColor = Color.White,
+                                 icon = Icons.Rounded.Done,
+                                 iconColor = Color.White,
+                                 backgroundColor =Color(0xFF018786)
+                             )
+
+
+
+
                              navController.popBackStack()
 
                              System.out.println("authstate_1_value ${responsestate.value}")
@@ -132,14 +130,17 @@ LaunchedEffect(key1 = context){
                                  icon = Icons.Rounded.Done,
                                  iconColor = Color.White,
                                  backgroundColor =Color(0xFF018786)
-
                              )
-
-
-
                             loading.value=false
                          }
                         else if (responsestate.value==3){
+                             message= CustomMessage(
+                                 textString = showmessage.value,
+                                 textColor = Color.White,
+                                 icon = Icons.Rounded.Done,
+                                 iconColor = Color.White,
+                                 backgroundColor =Color(0xFF018786)
+                             )
                              loading.value=false
 
 
@@ -358,11 +359,8 @@ LaunchedEffect(key1 = context){
                             navController.navigate(Screens.Login.route)
 
                         })
-                    InfoBar(offeredMessage =message, content = {
-                        content
-                    }) {
-                       message=null
-                    }
+
+
 
 
                 }
@@ -377,7 +375,9 @@ LaunchedEffect(key1 = context){
 
         }
 
-
+        InfoBar(offeredMessage = message, content = content) {
+            message = null
+        }
 
     }
 

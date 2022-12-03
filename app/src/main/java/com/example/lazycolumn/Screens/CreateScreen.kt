@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import com.example.lazycolumn.Activity.MainActivity
 import com.example.lazycolumn.FormValidation.ProductFormEvent
 import com.example.lazycolumn.R
-import com.example.lazycolumn.ViewModel.ItemViewModel
+import com.example.lazycolumn.ViewModel.ProductDataViewModel
 import com.example.lazycolumn.ViewModel.ProductValidationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun CreateScreen(navController: NavHostController){
 
-    val itemviewModel:ItemViewModel= hiltViewModel()
+    val productDataViewModel:ProductDataViewModel= hiltViewModel()
+
     val productsavingviewmodel= viewModel<ProductValidationViewModel>()
     val state=productsavingviewmodel.state
     val context= LocalContext.current
@@ -58,7 +59,7 @@ fun CreateScreen(navController: NavHostController){
                     proddesc=productsavingviewmodel.state.productdesc
                     prodprice=productsavingviewmodel.state.productprice
                     prodqty=productsavingviewmodel.state.productqty
-                    itemviewModel.addProducts(prodName,proddesc,prodprice.toDouble(),prodqty.toLong())
+                    productDataViewModel.insertproducts(prodName,proddesc,prodprice.toDouble(),prodqty.toLong())
 
 
                 }

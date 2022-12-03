@@ -2,7 +2,7 @@ package com.example.lazycolumn.Network
 
  class API {
     companion object{
-        val BaseUrl="http://192.168.71.131:8000/api/"
+        val BaseUrl="http://192.168.13.131:8000/api/"
         const val Login="login/"
         val Registerusers=BaseUrl+"register/"
         const val Upload="fileupload/"

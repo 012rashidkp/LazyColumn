@@ -14,12 +14,12 @@ class AuthApiHelper(private val authApiService: AuthApiService):
         city: String,
         password: String
     ): Flow<Resource<AuthResponse>> = flow {
+        emit(Resource.Loading(data = null))
        try {
-         emit(Resource.Loading())
-          val authresult=authApiService.Registeruser(username,email,phone,city,password)
-           emit(Resource.Success(data =authresult))
+        //  val authresult=authApiService.Registeruser(username,email,phone,city,password)
+           emit(Resource.Success(data =authApiService.Registeruser(username,email,phone,city,password)))
        }catch (e:Exception){
-           emit(Resource.Error(e.message ?: "Error"))
+           emit(Resource.Error(data = null, message = e.message ?: "Error Occurred!"))
        }
 
     }
