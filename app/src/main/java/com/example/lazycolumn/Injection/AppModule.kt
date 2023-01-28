@@ -1,7 +1,7 @@
 package com.example.lazycolumn.Injection
 
-import com.example.lazycolumn.Utils.Constants.Companion.NAME_PROPERTY
-import com.example.lazycolumn.Utils.Constants.Companion.PRODUCTS_COLLECTION
+import com.example.lazycolumn.Common.Constants.Companion.NAME_PROPERTY
+import com.example.lazycolumn.Common.Constants.Companion.PRODUCTS_COLLECTION
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import dagger.Module

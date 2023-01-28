@@ -1,9 +1,9 @@
 package com.example.lazycolumn.Injection
 
 import android.app.Application
-import com.example.lazycolumn.Database.ProductDataSource
+import com.example.lazycolumn.Repository.Local.ProductDataSource
 import com.example.lazycolumn.ItemsDatabase
-import com.example.lazycolumn.Repository.ProductDataRepository
+import com.example.lazycolumn.Repository.Local.ProductDataRepository
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module

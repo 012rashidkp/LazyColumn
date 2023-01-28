@@ -1,9 +1,9 @@
 package com.example.lazycolumn.Injection
 
-import com.example.lazycolumn.Network.AuthApiClient
-import com.example.lazycolumn.Network.AuthApiHelper
-import com.example.lazycolumn.Network.AuthApiService
-import com.example.lazycolumn.Repository.AuthRepository
+import com.example.lazycolumn.Domain.Network.AuthApiClient
+import com.example.lazycolumn.Repository.Remote.AuthRepositoryImpl
+import com.example.lazycolumn.Domain.Network.AuthApiService
+import com.example.lazycolumn.Repository.Remote.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +13,9 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
+
+
+
 import javax.inject.Singleton
 
 @Module
@@ -35,6 +38,6 @@ object ApiModule {
     fun provideauthApi(client: HttpClient): AuthApiService = AuthApiClient(client)
 
     @Provides
-    fun provideauthRepository(api: AuthApiService):AuthRepository = AuthApiHelper(api)
+    fun provideauthRepository(api: AuthApiService): AuthRepository = AuthRepositoryImpl(api)
 
 }
