@@ -1,5 +1,6 @@
 package com.example.lazycolumn.Presentation.Screens
 
+import androidx.compose.animation.core.animate
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,11 @@ import com.example.lazycolumn.R
 import com.example.lazycolumn.Common.CustomMessage
 import com.example.lazycolumn.Common.DataStore
 import com.example.lazycolumn.Common.content
+import com.example.lazycolumn.Presentation.Components.Loadingbar
+import com.example.lazycolumn.Presentation.Components.passwordfieldcomponent
+import com.example.lazycolumn.Presentation.Components.submitbutton
+import com.example.lazycolumn.Presentation.Components.textfieldcomponent
+import com.example.lazycolumn.Presentation.Components.tvcomponent
 import com.example.lazycolumn.ViewModel.AuthViewModel
 import com.example.lazycolumn.ViewModel.RegisterValidationViewModel
 import com.radusalagean.infobarcompose.InfoBar
@@ -74,12 +80,12 @@ fun RegisterPage(navController: NavController){
 if (authstate.error==true){
     System.out.println("error_state ${authstate.error}")
     responsestate.value=2
-    showmessage.value=authstate.register_response!!.message
+    showmessage.value=authstate.register_response!!.message!!
 }
 else if (authstate.error==false){
     System.out.println("error_state ${authstate.error}")
     responsestate.value=1
-    showmessage.value=authstate.register_response!!.message
+    showmessage.value=authstate.register_response!!.message!!
 
 }
 else if (authstate.loading){
@@ -120,14 +126,14 @@ LaunchedEffect(key1 = context){
                                  backgroundColor =Color(0xFF018786)
                              )
 
-                             scope.launch {
-                                 dataStore.saveEmail(authstate.register_response!!.email)
-                                 dataStore.savePhone(authstate.register_response!!.phone)
-                                 dataStore.saveusername(authstate.register_response!!.username)
-                                 dataStore.saveusercity(authstate.register_response!!.city)
-                                 dataStore.saveusertoken(authstate.register_response.token)
-
-                             }
+//                             scope.launch {
+//                                 dataStore.saveEmail(authstate.register_response!!.email!!)
+//                                 dataStore.savePhone(authstate.register_response!!.phone!!)
+//                                 dataStore.saveusername(authstate.register_response!!.username!!)
+//                                 dataStore.saveusercity(authstate.register_response!!.city!!)
+//                                 dataStore.saveusertoken(authstate.register_response.authtoken!!)
+//
+//                             }
 
 
                              navController.popBackStack()
@@ -187,139 +193,86 @@ LaunchedEffect(key1 = context){
                 Column( modifier = Modifier
                     .fillMaxWidth(0.8f)) {
 
-                    TextField(
-
-                        value = state.email, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.EmailChanged(it))},
-                        label = { Text(text = "Email Address", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        placeholder = { Text(text = "Email Address", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        leadingIcon = { Icon(painter = emailicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colorResource(id = R.color.greycolor)),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            cursorColor = maincolor,
-                            focusedIndicatorColor = greycolor,
-                            textColor = colorResource(id = R.color.black)
-                        ),
-                        isError = state.emailError !=null,
-
+                    //email
+                    textfieldcomponent(
+                        value =state.email ,
+                        changevalue ={
+                            registerviewModel.onEvent(RegisterFormEvent.EmailChanged(it))
+                        } ,
+                        labeltext ="Email Address" ,
+                        placeholdertext = "Email Address",
+                        keyboardType = KeyboardType.Email ,
+                        icon =emailicon ,
+                        isError =state.emailError!=null
                     )
+
                     if (state.emailError!=null){
                         Text(text = state.emailError, color = MaterialTheme.colors.error)
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
-
-                    TextField(
-
-                        value = state.username, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.UserNameChanged(it))},
-                        label = { Text(text = "User Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        placeholder = { Text(text = "User Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        leadingIcon = { Icon(painter = usernameicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
-
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colorResource(id = R.color.greycolor)),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            cursorColor = maincolor,
-                            focusedIndicatorColor = greycolor,
-                            textColor = colorResource(id = R.color.black)
-                        ),
-                   isError = state.usernameError!=null
+                    textfieldcomponent(
+                        value = state.username,
+                        changevalue ={
+                            registerviewModel.onEvent(RegisterFormEvent.UserNameChanged(it))
+                        } ,
+                        labeltext = "User Name",
+                        placeholdertext = "User Name",
+                        keyboardType = KeyboardType.Text,
+                        icon = usernameicon,
+                        isError =state.usernameError!=null
                     )
+
                     if (state.usernameError!=null){
                         Text(text = state.usernameError, color = MaterialTheme.colors.error)
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
-
-                    TextField(
-
-                        value = state.phone, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.PhoneChanged(it))},
-                        label = { Text(text = "Phone Number", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        placeholder = { Text(text = "Phone Number", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-
-                        leadingIcon = { Icon(painter = phoneicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
-
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colorResource(id = R.color.greycolor)),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            cursorColor = maincolor,
-                            focusedIndicatorColor = greycolor,
-                            textColor = colorResource(id = R.color.black)
-                        ),
-                     isError = state.phoneError!=null
+                    textfieldcomponent(
+                        value = state.phone,
+                        changevalue = {
+                            registerviewModel.onEvent(RegisterFormEvent.PhoneChanged(it))
+                        },
+                        labeltext = "Phone Number",
+                        placeholdertext ="Phone Number" ,
+                        keyboardType = KeyboardType.Phone,
+                        icon = phoneicon,
+                        isError =state.phoneError!=null
                     )
+
                     if (state.phoneError!=null){
                         Text(text = state.phoneError, color = MaterialTheme.colors.error)
                     }
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    TextField(
-
-                        value = state.city, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.CityChanged(it))},
-                        label = { Text(text = "City Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        placeholder = { Text(text = "City Name", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        singleLine = true,
-                        leadingIcon = { Icon(painter = cityicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colorResource(id = R.color.greycolor)),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            cursorColor = maincolor,
-                            focusedIndicatorColor = greycolor,
-                            textColor = colorResource(id = R.color.black)
-                        ),
-                     isError =state.cityError!=null
+                    textfieldcomponent(
+                        value = state.city,
+                        changevalue ={
+                            registerviewModel.onEvent(RegisterFormEvent.CityChanged(it))
+                        } ,
+                        labeltext = "City Name",
+                        placeholdertext ="City Name" ,
+                        keyboardType = KeyboardType.Text,
+                        icon = cityicon,
+                        isError =state.cityError!=null
                     )
+
+
                     if (state.cityError!=null){
                         Text(text = state.cityError, color = MaterialTheme.colors.error)
                     }
 
 
                     Spacer(modifier = Modifier.height(15.dp))
-
-                    TextField(
-
-                        value = state.password, onValueChange ={registerviewModel.onEvent(RegisterFormEvent.PasswordChanged(it))},
-                        label = { Text(text = "Password", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        placeholder = { Text(text = "Password", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        leadingIcon = { Icon(painter = passwordicon, contentDescription = null, tint = colorResource(id = R.color.teal_700)) },
-
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colorResource(id = R.color.greycolor)),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            cursorColor = maincolor,
-                            focusedIndicatorColor = greycolor,
-                            textColor = colorResource(id = R.color.black)
-                        ),
-                        trailingIcon = { Icon(painter = if (!passwordvisibility.value) hidepasswordicon else showpasswordicon , contentDescription =null,tint=maincolor ,   modifier = Modifier
-                            .size(28.dp)
-                            .clickable {
-                                passwordvisibility.value = !passwordvisibility.value
-                            })},
-
-                       isError = state.passwordError!=null,
-                        visualTransformation = if (passwordvisibility.value) VisualTransformation.None else PasswordVisualTransformation()
+                    passwordfieldcomponent(
+                        value = state.password,
+                        changevalue ={
+                            registerviewModel.onEvent(RegisterFormEvent.PasswordChanged(it))
+                                     } ,
+                        isError =state.passwordError!=null
                     )
+
                     if (state.passwordError!=null){
                         Text(text = state.passwordError, color = MaterialTheme.colors.error)
                     }
@@ -327,38 +280,15 @@ LaunchedEffect(key1 = context){
 
 
                     Spacer(modifier = Modifier.height(20.dp))
+                   //button
+                    submitbutton(
+                        onClick = {
+                        registerviewModel.onEvent(RegisterFormEvent.Register)
+                                  },
+                      loading =loading.value,
+                      buttontxt = "Register"
+                    )
 
-
-
-
-
-
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .background(
-                                colorResource(id = R.color.teal_700),
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .clickable {
-                                registerviewModel.onEvent(RegisterFormEvent.Register)
-                            }) {
-
-                        if (loading.value){
-                            CircularProgressIndicator(modifier = Modifier
-                                .wrapContentHeight()
-                                .wrapContentWidth()
-                                .align(alignment = Alignment.Center),color= colorResource(
-                                id = R.color.white
-                            ))
-                        }
-                        else{
-                            Text(text = "Register", color = colorResource(id = R.color.white), fontSize = 19.sp, textAlign = TextAlign.Center, modifier= Modifier.align(alignment = Alignment.Center))
-
-                        }
-
-                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = "Already a Account", color = colorResource(id = R.color.teal_700), fontSize = 19.sp, textAlign = TextAlign.Center, modifier = Modifier
                         .align(alignment = Alignment.CenterHorizontally)
@@ -393,3 +323,6 @@ LaunchedEffect(key1 = context){
 
 
 }
+
+
+

@@ -15,7 +15,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.lazycolumn.FormValidation.ProductFormEvent
 import com.example.lazycolumn.Navigation.Screens
 import com.example.lazycolumn.R
@@ -165,8 +168,9 @@ fun loadingcards(items: ProductEntity,productDataViewModel: ProductDataViewModel
 
             }
             .padding(horizontal = 10.dp)
-            .wrapContentHeight(), elevation = 8.dp,
-        shape = MaterialTheme.shapes.small
+            .wrapContentHeight(),
+            elevation = 8.dp,
+            shape = MaterialTheme.shapes.small
     ) {
         Row(
             modifier = Modifier
@@ -174,6 +178,16 @@ fun loadingcards(items: ProductEntity,productDataViewModel: ProductDataViewModel
                 .padding(all = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            AsyncImage(
+                model = items.prod_image,
+                contentDescription = "",
+                modifier = Modifier
+                    .width(65.dp)
+                    .height(65.dp),
+                contentScale = ContentScale.Crop
+            )
+
+
             Column(modifier = Modifier.fillMaxWidth(0.90f)) {
                 Text(
                     text = items.productName,
@@ -188,7 +202,8 @@ fun loadingcards(items: ProductEntity,productDataViewModel: ProductDataViewModel
                 )
             }
             IconButton(onClick = {productDataViewModel.deleteproduct(items.id)}) {
-                Icon(painter = painterResource(id = R.drawable.ic_delete), contentDescription =null,
+                Icon(painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription =null,
                     tint = colorResource(id = R.color.teal_700)
                 )
 
@@ -211,7 +226,10 @@ fun alert(msg: String,showDialog: Boolean,productDataViewModel: ProductDataViewM
     if (showDialog) {
         val loading = remember { mutableStateOf(false) }
         productDataViewModel.productsdetails.let { products->
-
+            val productNameState = remember { mutableStateOf(products?.productName ?: "") }
+            val productDescState= remember { mutableStateOf(products?.prodDesc ?: "") }
+            val productpriceState= remember { mutableStateOf(products?.prod_price ?: "") }
+            val productqtyState= remember { mutableStateOf(products?.prod_qty ?:"") }
             AlertDialog(
                 backgroundColor = colorResource(id = R.color.white),
                 text = {
@@ -220,7 +238,11 @@ fun alert(msg: String,showDialog: Boolean,productDataViewModel: ProductDataViewM
                         Spacer(modifier = Modifier.height(20.dp))
 
                         TextField(
-                            value ="${products?.productName}", onValueChange = {productsavingviewmodel.onEvent(ProductFormEvent.ProductNameChanged("yes"))},
+                            value =productNameState.value,
+                            onValueChange = { newValue ->
+                              productNameState.value=newValue
+
+                            },
                             label = {
                                 Text(
                                     text = "Product Name",
@@ -239,7 +261,9 @@ fun alert(msg: String,showDialog: Boolean,productDataViewModel: ProductDataViewM
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             modifier = Modifier
                                 .background(colorResource(id = R.color.greycolor))
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(16.dp)),
+
                             colors = TextFieldDefaults.textFieldColors(
                                 cursorColor = colorResource(id = R.color.black),
                                 focusedIndicatorColor = colorResource(id = R.color.greycolor),
@@ -250,7 +274,8 @@ fun alert(msg: String,showDialog: Boolean,productDataViewModel: ProductDataViewM
 
 
                         Spacer(modifier = Modifier.height(20.dp))
-                        TextField(value = "${products?.prodDesc}", onValueChange ={},
+                        TextField(value = productDescState.value,
+                            onValueChange ={ newvalue->productDescState.value =newvalue },
                             label = { Text(text = "Product Desc", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                             placeholder = { Text(text = "Product Desc", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                             singleLine = true,
@@ -270,7 +295,9 @@ fun alert(msg: String,showDialog: Boolean,productDataViewModel: ProductDataViewM
 
 
                         Spacer(modifier = Modifier.height(20.dp))
-                        TextField(value = "${products?.prod_price}", onValueChange ={},
+                        TextField(
+                            value = "${productpriceState.value}",
+                            onValueChange ={ newvalue->productpriceState.value=newvalue },
                             label = { Text(text = "Product Price", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                             placeholder = { Text(text = "Product Price", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                             singleLine = true,
@@ -290,7 +317,9 @@ fun alert(msg: String,showDialog: Boolean,productDataViewModel: ProductDataViewM
 
 
                         Spacer(modifier = Modifier.height(20.dp))
-                        TextField(value = "${products?.prod_qty}", onValueChange ={},
+                        TextField(
+                            value = "${productqtyState.value}",
+                            onValueChange ={ newvalue->productqtyState.value=newvalue },
                             label = { Text(text = "Product Qty", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                             placeholder = { Text(text = "Product Qty", color = colorResource(id = R.color.black), textAlign = TextAlign.Center) },
                             singleLine = true,

@@ -1,6 +1,10 @@
 package com.example.lazycolumn.FormValidation
 
+import android.net.Uri
+
 data class ProductValidationFormState(
+    val productimage: Uri? = null,
+    val productImageError:String?=null,
     val productName:String="",
     val productNameError:String?=null,
     val productdesc:String="",

@@ -18,9 +18,9 @@ class ProductDataViewModel @Inject constructor (private val productDataSource: P
     var productsdetails by mutableStateOf<ProductEntity?>(null)
         private set
 
-  fun insertproducts(productName:String,productdesc:String,productprice:Double,productqty:Long){
+  fun insertproducts(productName:String,productdesc:String,productprice:Double,productqty:Long,prod_image:ByteArray?){
       viewModelScope.launch {
-          productDataSource.insertproduct(productName = productName, productdesc = productdesc, prodprice = productprice, prodqty = productqty)
+          productDataSource.insertproduct(productName = productName, productdesc = productdesc, prodprice = productprice, prodqty = productqty, prod_image = prod_image!!)
       }
   }
 

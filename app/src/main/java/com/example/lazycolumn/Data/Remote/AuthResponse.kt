@@ -6,30 +6,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthResponse(
-    @SerialName("error")
-    val error: Boolean?,
-    @SerialName("message")
-    val message: String?,
     @SerialName("userid")
-    val userid: Int?,
+    val userid: String?="",
     @SerialName("username")
-    val username: String?,
+    val username: String?="",
     @SerialName("email")
-    val email: String?,
+    val email: String?="",
     @SerialName("phone")
-    val phone: String?,
+    val phone: String?="",
     @SerialName("city")
-    val city: String?,
+    val city: String?="",
     @SerialName("createdAt")
-    val createdAt: String?,
+    val createdAt: String?="",
     @SerialName("is_superuser")
-    val isSuperuser: Boolean?,
+    val isSuperuser: Boolean?=false,
     @SerialName("authtoken")
-    val authtoken: String?,
-    @SerialName("statuscode")
-    val statuscode: Int?,
-    @SerialName("status_description")
-    val statusDescription: String?,
-    @SerialName("current_time")
-    val currentTime: String?
-)
+    val authtoken: String?="",
+
+):BaseResponse()

@@ -1,8 +1,8 @@
 package com.example.lazycolumn.Injection
 
-import com.example.lazycolumn.Domain.Network.AuthApiClient
 import com.example.lazycolumn.Repository.Remote.AuthRepositoryImpl
 import com.example.lazycolumn.Domain.Network.AuthApiService
+import com.example.lazycolumn.Domain.Network.AuthApiServiceImpl
 import com.example.lazycolumn.Repository.Remote.AuthRepository
 import dagger.Module
 import dagger.Provides
@@ -35,7 +35,7 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideauthApi(client: HttpClient): AuthApiService = AuthApiClient(client)
+    fun provideauthApi(client: HttpClient): AuthApiService = AuthApiServiceImpl(client)
 
     @Provides
     fun provideauthRepository(api: AuthApiService): AuthRepository = AuthRepositoryImpl(api)

@@ -5,7 +5,7 @@ class ValidateProductDesc {
         if (productDesc.isBlank()) {
             return ValidateResult(
                 successfull = false,
-                ErrorMessage = "product description name Cannot be blank"
+                ErrorMessage = "product description Cannot be blank"
             )
         }
         return ValidateResult(successfull = true)

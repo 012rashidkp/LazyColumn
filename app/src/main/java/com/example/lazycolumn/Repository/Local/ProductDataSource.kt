@@ -9,7 +9,7 @@ interface ProductDataSource {
 
  suspend fun deleteproduct(id: Long)
 
- suspend fun insertproduct(id: Long?=null,productName:String,productdesc:String,prodprice:Double,prodqty:Long)
+ suspend fun insertproduct(id: Long?=null,productName:String,productdesc:String,prodprice:Double,prodqty:Long,prod_image:ByteArray)
 
 
 

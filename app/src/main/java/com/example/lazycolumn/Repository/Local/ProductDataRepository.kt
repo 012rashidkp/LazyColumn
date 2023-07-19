@@ -31,10 +31,11 @@ class ProductDataRepository(database:ItemsDatabase): ProductDataSource {
         productName: String,
         productdesc: String,
         prodprice: Double,
-        prodqty: Long
+        prodqty: Long,
+        prod_image:ByteArray
     ) {
       withContext(Dispatchers.IO){
-          queries.insertproduct(id,productName,productdesc,prodprice,prodqty)
+          queries.insertproduct(id,productName,productdesc,prodprice,prodqty,prod_image)
       }
 
 

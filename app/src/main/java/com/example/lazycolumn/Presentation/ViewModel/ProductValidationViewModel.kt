@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lazycolumn.FormValidation.LoginFormEvent
 import com.example.lazycolumn.FormValidation.ProductFormEvent
 import com.example.lazycolumn.FormValidation.ProductValidationFormState
 import com.example.lazycolumn.Domain.Use_Cases.ValidateProductDesc
+import com.example.lazycolumn.Domain.Use_Cases.ValidateProductImage
 import com.example.lazycolumn.Domain.Use_Cases.ValidateProductName
 import com.example.lazycolumn.Domain.Use_Cases.ValidateProductPrice
 import com.example.lazycolumn.Domain.Use_Cases.ValidateProductQty
@@ -16,12 +16,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class ProductValidationViewModel(private val validateProductName: ValidateProductName = ValidateProductName(), private val validateProductDesc: ValidateProductDesc = ValidateProductDesc(), private val validateProductPrice: ValidateProductPrice = ValidateProductPrice(), private val validateProductQty: ValidateProductQty = ValidateProductQty()):ViewModel() {
+class ProductValidationViewModel(private val validateProductImage: ValidateProductImage= ValidateProductImage(), private val validateProductName: ValidateProductName = ValidateProductName(), private val validateProductDesc: ValidateProductDesc = ValidateProductDesc(), private val validateProductPrice: ValidateProductPrice = ValidateProductPrice(), private val validateProductQty: ValidateProductQty = ValidateProductQty()):ViewModel() {
     var state by mutableStateOf(ProductValidationFormState())
     private val validationeventchannel= Channel<ValidationEvent>()
     val validationEvents=validationeventchannel.receiveAsFlow()
     fun onEvent(event: ProductFormEvent){
         when(event){
+            is ProductFormEvent.ProductImageChanged->{
+                state=state.copy(productimage = event.productImage)
+            }
+
             is ProductFormEvent.ProductNameChanged->{
                 state=state.copy(productName = event.productName)
             }
@@ -41,18 +45,22 @@ class ProductValidationViewModel(private val validateProductName: ValidateProduc
         }
     }
     private fun SavingProductValidated() {
+        val productimageResult=validateProductImage.execute(state.productimage)
         val productNameresult=validateProductName.execute(state.productName)
         val productDescresult=validateProductDesc.execute(state.productdesc)
         val productPriceresult=validateProductPrice.execute(state.productprice)
         val productQtyresult=validateProductQty.execute(state.productqty)
-        val haserror= listOf(productNameresult,productDescresult,productPriceresult,productQtyresult).any { !it.successfull }
+        val haserror= listOf(productimageResult,productNameresult,productDescresult,productPriceresult,productQtyresult).any { !it.successfull }
 
         if (haserror){
             state=state.copy(
+                productImageError = productimageResult.ErrorMessage,
                 productNameError = productNameresult.ErrorMessage,
                 productdescError = productDescresult.ErrorMessage,
                 productpriceError =productPriceresult.ErrorMessage,
-                productqtyError = productQtyresult.ErrorMessage
+                productqtyError = productQtyresult.ErrorMessage,
+
+
 
             )
             return
